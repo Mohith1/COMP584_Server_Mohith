@@ -1,0 +1,6 @@
+@COMP584_Server_Mohith_HostAddress = http://localhost:5037
+
+GET {{COMP584_Server_Mohith_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
