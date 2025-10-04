@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using WorldModel;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -6,17 +7,16 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
-builder.Services.AddDbContext<Comp584MohithDatabaseContext>();
+builder.Services.AddDbContext<Comp584MohithDatabaseContext>( options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+});
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "My API", Version = "v1" });
-    // Optional: Include XML comments for better documentation
-    // var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-    // var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-    // c.IncludeXmlComments(xmlPath);
 });
 var app = builder.Build();
 
