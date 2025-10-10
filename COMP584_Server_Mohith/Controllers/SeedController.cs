@@ -1,4 +1,5 @@
-﻿using CsvHelper;
+﻿using COMP584_Server_Mohith.Data;
+using CsvHelper;
 using CsvHelper.Configuration;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -22,13 +23,34 @@ namespace COMP584_Server_Mohith.Controllers
 
             Dictionary<string, Country> countries = await context.Countries.AsNoTracking()
                 .ToDictionaryAsync(c => c.Name, StringComparer.OrdinalIgnoreCase);
-            await context.SaveChangesAsync();
+            
 
-            CsvConfiguration config = new(CultureInfo.InvariantCulture) { HasHeaderRecord = true, HeaderValidated = null }; 
+            CsvConfiguration config = new(CultureInfo.InvariantCulture) { 
+                HasHeaderRecord = true, HeaderValidated = null }; 
+            
             using StreamReader reader = new(_pathName); 
             using CsvReader csv = new(reader, config); 
-            List<Comp584MohithDatabaseContext> records = csv.GetRecords<Comp584MohithDatabaseContext>().ToList();
+            List<Comp584MohithDatabaseCSV> records = csv.GetRecords<Comp584MohithDatabaseCSV>().ToList();
+            foreach (Comp584MohithDatabaseCSV record in records)
+            {
+                if (!countries.ContainsKey(record.country))
+                {
+                    Country country= new()
+                    {
+                        Name = record.country,
+                        Iso2 = record.iso2,
+                        Iso3 = record.iso3,
+                    };
+                  //Country country = country;
 
+                    countries.Add(country.Name, country);
+                    await context.Countries.AddAsync(country);
+
+                }
+              //Country country = new Country();
+            }
+
+            await context.SaveChangesAsync();
             return Ok();
         }
 
