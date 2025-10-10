@@ -16,7 +16,8 @@ namespace COMP584_Server_Mohith.Controllers
         public async Task<ActionResult> PostCountries()
         {
 
-            var countries = await context.Countries.ToDictionaryAsync(c => c.Name, StringComparer.OrdinalIgnoreCase);
+            var countries = await context.Countries.AsNoTracking()
+                .ToDictionaryAsync(c => c.Name, StringComparer.OrdinalIgnoreCase);
             await context.SaveChangesAsync();
 
             return Ok();
