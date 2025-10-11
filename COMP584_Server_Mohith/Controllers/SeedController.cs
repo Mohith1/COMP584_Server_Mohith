@@ -41,13 +41,12 @@ namespace COMP584_Server_Mohith.Controllers
                         Iso2 = record.iso2,
                         Iso3 = record.iso3,
                     };
-                  //Country country = country;
 
                     countries.Add(country.Name, country);
                     await context.Countries.AddAsync(country);
 
                 }
-              //Country country = new Country();
+              
             }
 
             await context.SaveChangesAsync();
@@ -57,6 +56,36 @@ namespace COMP584_Server_Mohith.Controllers
         [HttpPost ("Cities")]
         public async Task<ActionResult> PostCities()
         {
+            Dictionary<string, Country> countries = await context.Countries.AsNoTracking()
+                .ToDictionaryAsync(c => c.Name, StringComparer.OrdinalIgnoreCase);
+
+
+            CsvConfiguration config = new(CultureInfo.InvariantCulture)
+            {
+                HasHeaderRecord = true,
+                HeaderValidated = null
+            };
+
+            using StreamReader reader = new(_pathName);
+            using CsvReader csv = new(reader, config);
+            List<Comp584MohithDatabaseCSV> records = csv.GetRecords<Comp584MohithDatabaseCSV>().ToList();
+            foreach (Comp584MohithDatabaseCSV record in records)
+            {
+              if (record.population.HasValue && record.population.Value > 0 )
+                {
+                    City city = new()
+                    {
+                        CityName = record.country,
+                        Latitude = (double)record.lat,
+                        Longitude = (double)record.lng,
+                        Population = (int)record.population.Value,
+                        CountryId = countries[record.country].Id
+                    };
+                    await context.Cities.AddAsync(city);
+                }
+
+
+            }
 
             await context.SaveChangesAsync();
 
