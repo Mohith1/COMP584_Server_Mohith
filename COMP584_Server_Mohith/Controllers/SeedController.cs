@@ -69,6 +69,7 @@ namespace COMP584_Server_Mohith.Controllers
             using StreamReader reader = new(_pathName);
             using CsvReader csv = new(reader, config);
             List<Comp584MohithDatabaseCSV> records = csv.GetRecords<Comp584MohithDatabaseCSV>().ToList();
+            int cityCount = 0;
             foreach (Comp584MohithDatabaseCSV record in records)
             {
               if (record.population.HasValue && record.population.Value > 0 )
@@ -82,6 +83,7 @@ namespace COMP584_Server_Mohith.Controllers
                         CountryId = countries[record.country].Id
                     };
                     await context.Cities.AddAsync(city);
+                    cityCount++;
                 }
 
 
@@ -89,7 +91,7 @@ namespace COMP584_Server_Mohith.Controllers
 
             await context.SaveChangesAsync();
 
-            return Ok();
+            return new JsonResult(cityCount);
         }
 
     }

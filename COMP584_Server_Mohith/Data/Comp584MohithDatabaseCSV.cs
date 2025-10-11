@@ -11,7 +11,7 @@
         public required string iso3 { get; set; }
         public required string admin_name {  get; set; }
         public required string capital { get; set; }
-        public int? population { get; set; }
+        public decimal? population{get; set; }
         public long id { get; set; }
 
 
