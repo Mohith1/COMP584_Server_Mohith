@@ -28,7 +28,7 @@ public partial class City
     public double Longitude { get; set; }
 
     [Column("POPULATION")]
-    public int Population { get; set; }
+    public decimal Population { get; set; }
 
     [ForeignKey("CountryId")]
     [InverseProperty("Cities")]
