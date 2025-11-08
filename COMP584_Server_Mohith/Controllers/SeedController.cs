@@ -113,10 +113,24 @@ namespace COMP584_Server_Mohith.Controllers
                 UserName = "admin",
                 Email = "mohith81999@gmail.com",
                 EmailConfirmed = true,
+                LockoutEnabled = false,
                 SecurityStamp = Guid.NewGuid().ToString()
             };
 
             await userManager.CreateAsync(adminUser, configuration["DefaultPasswords:admin"]!);
+            await userManager.AddToRoleAsync(adminUser, adminstrator);
+
+            WorldModelUser regularUser = new()
+            {
+                UserName = "user",
+                Email = "user@gmail.com",
+                EmailConfirmed = true,
+                LockoutEnabled = false,
+                SecurityStamp = Guid.NewGuid().ToString()
+            };
+
+            await userManager.CreateAsync(regularUser, configuration["DefaultPasswords:user"]!);
+            await userManager.AddToRoleAsync(regularUser, registeredUser);
 
 
 
