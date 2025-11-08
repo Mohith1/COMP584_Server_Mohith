@@ -2,6 +2,7 @@
 using CsvHelper;
 using CsvHelper.Configuration;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -12,7 +13,8 @@ namespace COMP584_Server_Mohith.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class SeedController(Comp584MohithDatabaseContext context,IHostEnvironment environment) : ControllerBase
+    public class SeedController(Comp584MohithDatabaseContext context,IHostEnvironment environment,
+        RoleManager<IdentityRole> roleManager, UserManager<WorldModelUser> userManager, IConfiguration configuration) : ControllerBase
     {
         // POST: api/Countries
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
@@ -92,6 +94,33 @@ namespace COMP584_Server_Mohith.Controllers
             await context.SaveChangesAsync();
 
             return new JsonResult(cityCount);
+        }
+
+        [HttpPost("Users")]
+        public async Task<ActionResult> PostUsers()
+        {
+
+            string adminstrator = "adminstrator";
+            string registeredUser = "registeredUser";
+            if (!await roleManager.RoleExistsAsync(adminstrator)){
+                await roleManager.CreateAsync(new IdentityRole(adminstrator));
+            }
+            if (!await roleManager.RoleExistsAsync(registeredUser)){
+                await roleManager.CreateAsync(new IdentityRole(registeredUser));
+            }
+            WorldModelUser adminUser = new()
+            {
+                UserName = "admin",
+                Email = "mohith81999@gmail.com",
+                EmailConfirmed = true,
+                SecurityStamp = Guid.NewGuid().ToString()
+            };
+
+            await userManager.CreateAsync(adminUser, configuration["DefaultPasswords:admin"]!);
+
+
+
+            return Ok();
         }
 
     }

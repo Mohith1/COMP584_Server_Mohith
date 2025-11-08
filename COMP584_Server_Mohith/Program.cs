@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using WorldModel;
 
@@ -11,6 +12,15 @@ builder.Services.AddDbContext<Comp584MohithDatabaseContext>( options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+
+builder.Services.AddIdentity<WorldModelUser, IdentityRole>(options =>
+{
+    options.Password.RequireDigit = true;
+    
+})
+    .AddEntityFrameworkStores<Comp584MohithDatabaseContext>();
+
+
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
@@ -32,6 +42,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseCors(options => options.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 

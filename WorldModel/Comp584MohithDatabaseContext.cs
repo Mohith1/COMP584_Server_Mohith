@@ -35,7 +35,8 @@ public partial class Comp584MohithDatabaseContext : IdentityDbContext<WorldModel
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
+    {   
+        base.OnModelCreating(modelBuilder);
         modelBuilder.Entity<City>(entity =>
         {
             entity.HasOne(d => d.Country).WithMany(p => p.Cities)

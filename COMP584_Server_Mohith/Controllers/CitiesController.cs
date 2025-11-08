@@ -13,9 +13,9 @@ namespace COMP584_SERVER.Controllers
     [ApiController]
     public class CitiesController : ControllerBase
     {
-        private readonly Comp584DbContext _context;
+        private readonly Comp584MohithDatabaseContext _context;
 
-        public CitiesController(Comp584DbContext context)
+        public CitiesController(Comp584MohithDatabaseContext context)
         {
             _context = context;
         }
