@@ -2,13 +2,14 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.IdentityModel.Tokens.Jwt;
 using WorldModel;
 
 namespace COMP584_Server_Mohith.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AdminController(UserManager<WorldModelUser> userManager) : ControllerBase
+    public class AdminController(UserManager<WorldModelUser> userManager, JwtHandler jwtHandler) : ControllerBase
     {
         // POST: api/Login
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
@@ -27,7 +28,14 @@ namespace COMP584_Server_Mohith.Controllers
             {
                 return Unauthorized("Invalid Password");
             }
-            return Ok("Login Successful");
+
+            JwtSecurityToken jwtToken = await jwtHandler.GenerateTokenAsync(worldUser);
+            string stringToken = new JwtSecurityTokenHandler().WriteToken(jwtToken);
+            return Ok(new LoginResponse {
+                Success = true,
+                Message = "Mom Loves me!",
+                Token = stringToken
+            });
 
         }
     }

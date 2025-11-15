@@ -1,3 +1,4 @@
+using COMP584_Server_Mohith;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using WorldModel;
@@ -23,6 +24,7 @@ builder.Services.AddIdentity<WorldModelUser, IdentityRole>(options =>
 
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+builder.Services.AddScoped<JwtHandler>();
 builder.Services.AddOpenApi();
 builder.Services.AddSwaggerGen(c =>
 {
