@@ -7,6 +7,7 @@ using COMP584_SERVER.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WorldModel;
+using Microsoft.AspNetCore.Authorization;
 
 namespace COMP584_Server_Mohith.Controllers
 {
@@ -18,6 +19,7 @@ namespace COMP584_Server_Mohith.Controllers
 
         // GET: api/Countries
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<Country>>> GetCountries()
         {
             return await context.Countries.ToListAsync();
