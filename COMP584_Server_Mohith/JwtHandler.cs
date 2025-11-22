@@ -2,6 +2,7 @@
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Text;
 using WorldModel;
 
 namespace COMP584_Server_Mohith
@@ -13,9 +14,9 @@ namespace COMP584_Server_Mohith
             // Implementation for generating JWT token
             return new JwtSecurityToken
             ( 
-                    issuer: configuration["JwtSettings:validIssuer"],
-                    audience: configuration["JwtSettings:validAudience"],
-                    expires: DateTime.Now.AddMinutes(Convert.ToDouble(configuration["JwtSettings:expiresInMinutes"])),
+                    issuer: configuration["JwtSettings:Issuer"],
+                    audience: configuration["JwtSettings:Audience"],
+                    expires: DateTime.Now.AddMinutes(Convert.ToDouble(configuration["JwtSettings:ExpiryInMinutes"])),
                     claims : await GetClaimsAsync(user),
                     signingCredentials : GetSigningCredentials()
             );
@@ -25,7 +26,7 @@ namespace COMP584_Server_Mohith
     private SigningCredentials GetSigningCredentials()
         {
             // Implementation for getting signing credentials
-            byte[] key = Convert.FromBase64String(configuration["JwtSettings:SecretKey"]!);
+            byte[] key = Encoding.UTF8.GetBytes(configuration["JwtSettings:SecretKey"]!);
             var signingKey = new SymmetricSecurityKey(key);
             return new SigningCredentials(signingKey,SecurityAlgorithms.HmacSha256);
         }
